@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buoyant.io — Competitive UX Audit v2</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f5f4f0; --surface: #ffffff; --border: rgba(0,0,0,0.1);
+    --border-strong: rgba(0,0,0,0.2); --text: #1a1a18; --muted: #6b6b65;
+    --hint: #9e9e96; --blue: #1a5ccc; --blue-bg: #e8f0fc;
+    --green: #176b3a; --green-bg: #e4f5ec; --amber: #7a4a00;
+    --amber-bg: #fef3d8; --red: #8b1f1f; --red-bg: #fdeaea; --gray-bg: #f0efe9;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.6; }
+  header { background: var(--text); color: #f5f4f0; padding: 3rem 2.5rem 2.5rem; position: relative; overflow: hidden; }
+  header::after { content: 'UX AUDIT'; position: absolute; right: -1rem; top: 50%; transform: translateY(-50%); font-family: 'DM Mono', monospace; font-size: 7rem; font-weight: 500; color: rgba(255,255,255,0.04); pointer-events: none; white-space: nowrap; }
+  .header-tag { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: #888; text-transform: uppercase; margin-bottom: 0.75rem; }
+  .version-badge { display: inline-block; font-family: 'DM Mono', monospace; font-size: 10px; background: #27ae60; color: white; padding: 2px 8px; border-radius: 4px; margin-left: 10px; vertical-align: middle; }
+  header h1 { font-size: 2rem; font-weight: 300; letter-spacing: -0.02em; }
+  header h1 strong { font-weight: 500; }
+  .header-meta { font-size: 13px; color: #888; font-family: 'DM Mono', monospace; margin-top: 1.5rem; display: flex; gap: 2rem; flex-wrap: wrap; }
+  .header-meta span::before { content: '—'; margin-right: 6px; }
+  main { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  .score-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin: 2rem 0; }
+  .score-cell { background: var(--surface); padding: 1.25rem 1rem; text-align: center; }
+  .score-cell.buoyant { background: #f0f4ff; }
+  .score-cell .co { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+  .score-cell .num { font-size: 2rem; font-weight: 300; letter-spacing: -0.03em; }
+  .num.bad { color: #c0392b; } .num.ok { color: #e67e22; } .num.good { color: #27ae60; }
+  .score-cell .lbl { font-size: 11px; color: var(--hint); margin-top: 2px; }
+  .section-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--hint); margin: 2.5rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .tab { font-size: 12px; font-family: 'DM Mono', monospace; padding: 5px 14px; border-radius: 100px; border: 1px solid var(--border-strong); background: transparent; color: var(--muted); cursor: pointer; transition: all 0.15s; }
+  .tab:hover { background: var(--gray-bg); }
+  .tab.active { background: var(--text); color: #f5f4f0; border-color: var(--text); }
+  .panel { display: none; } .panel.active { display: block; }
+  .table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead tr { background: var(--gray-bg); }
+  th { text-align: left; padding: 10px 12px; font-weight: 500; font-size: 11px; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); border-bottom: 1px solid var(--border); white-space: nowrap; }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+  tr:last-child td { border-bottom: none; }
+  td:first-child { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; white-space: nowrap; }
+  .col-buoyant { background: #f7f9ff; } th.col-buoyant { background: #edf1ff; }
+  .tag { display: inline-block; font-size: 10px; font-family: 'DM Mono', monospace; padding: 2px 8px; border-radius: 4px; margin: 1px 2px 1px 0; white-space: nowrap; }
+  .tag-g { background: var(--green-bg); color: var(--green); }
+  .tag-r { background: var(--red-bg); color: var(--red); }
+  .tag-a { background: var(--amber-bg); color: var(--amber); }
+  .tag-b { background: var(--blue-bg); color: var(--blue); }
+  .dots { display: inline-flex; gap: 3px; align-items: center; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #ddd; flex-shrink: 0; }
+  .dot.b { background: var(--blue); } .dot.g { background: var(--green); }
+  .dot.r { background: #c0392b; } .dot.a { background: #e67e22; }
+  .score-label { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--muted); margin-left: 6px; }
+  .insight { border-left: 3px solid var(--blue); background: var(--blue-bg); padding: 12px 16px; border-radius: 0 8px 8px 0; font-size: 13px; color: #1a3a6e; margin-top: 1rem; }
+  .insight.warn { border-color: #e67e22; background: var(--amber-bg); color: var(--amber); }
+  .insight.good { border-color: var(--green); background: var(--green-bg); color: var(--green); }
+  .action { display: flex; gap: 14px; align-items: flex-start; padding: 1rem 0; border-bottom: 1px solid var(--border); }
+  .action:last-of-type { border-bottom: none; }
+  .action-n { width: 28px; height: 28px; border-radius: 50%; background: var(--text); color: var(--bg); display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 12px; flex-shrink: 0; margin-top: 1px; }
+  .action-title { font-weight: 500; font-size: 13px; margin-bottom: 3px; }
+  .action-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .correction-note { background: #f0f4ff; border: 1px solid #c0d4f5; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #1a3a6e; margin-bottom: 1.5rem; font-family: 'DM Mono', monospace; }
+  .correction-note strong { color: var(--blue); }
+  footer { text-align: center; padding: 2rem; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--hint); border-top: 1px solid var(--border); margin-top: 3rem; }
+  @media (max-width: 640px) { .score-grid { grid-template-columns: repeat(2, 1fr); } header h1 { font-size: 1.4rem; } header::after { display: none; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-tag">Competitive UX Audit · Homepage Teardown</div>
+  <h1><strong>Buoyant.io</strong> vs. Supabase, ngrok & Coder <span class="version-badge">v2 — verified from source</span></h1>
+  <div class="header-meta">
+    <span>April 2026</span>
+    <span>Data fetched directly from each site's HTML</span>
+    <span>5 criteria · 4 sites</span>
+  </div>
+</header>
+
+<main>
+
+  <div class="correction-note" style="border-color: #b0c4a0; background: #f0f5ec; color: #2d4a20; margin-bottom: 0.75rem;">
+    <strong style="color: #3a6b25;">Note for reviewers:</strong> Several of the opportunities identified in this audit reflect areas the team has actively explored in the past. Some recommendations were tested, implemented, or deliberately set aside due to strategic, technical, or business constraints at the time. This report is intended as a fresh external reference point — not a critique of prior decisions — and is best read as a prompt for revisiting what may now be worth reconsidering given the current context.
+  </div>
+
+  <div class="correction-note">
+    <strong>v2 corrections vs. v1:</strong> Supabase nav has 6 items — Product / Developers / Solutions / Pricing / Docs / Blog. ngrok nav has 7 items with very deep submenus; primary CTAs are "Log in" + "Sign up". Coder's primary CTA is "Get a demo", not self-serve. All headlines updated to match actual copy on each site.
+  </div>
+
+  <div class="section-label">Summary score — average across 5 criteria</div>
+
+  <div class="score-grid">
+    <div class="score-cell buoyant">
+      <div class="co">Buoyant</div>
+      <div class="num bad">2.2</div>
+      <div class="lbl">out of 5</div>
+    </div>
+    <div class="score-cell">
+      <div class="co">Supabase</div>
+      <div class="num good">4.2</div>
+      <div class="lbl">out of 5</div>
+    </div>
+    <div class="score-cell">
+      <div class="co">ngrok</div>
+      <div class="num good">4.0</div>
+      <div class="lbl">out of 5</div>
+    </div>
+    <div class="score-cell">
+      <div class="co">Coder</div>
+      <div class="num ok">3.2</div>
+      <div class="lbl">out of 5</div>
+    </div>
+  </div>
+
+  <div class="section-label">Criterion-by-criterion analysis</div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="show('hero',this)">Hero & message</button>
+    <button class="tab" onclick="show('nav',this)">Navigation</button>
+    <button class="tab" onclick="show('cta',this)">CTAs</button>
+    <button class="tab" onclick="show('social',this)">Social proof</button>
+    <button class="tab" onclick="show('tone',this)">Tone & audience</button>
+  </div>
+
+  <!-- HERO -->
+  <div id="hero" class="panel active">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:15%">Criterion</th>
+            <th class="col-buoyant" style="width:21.25%">Buoyant</th>
+            <th style="width:21.25%">Supabase</th>
+            <th style="width:21.25%">ngrok</th>
+            <th style="width:21.25%">Coder</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Headline</td>
+            <td class="col-buoyant">"The best service mesh for AWS"</td>
+            <td>"Build in a weekend. Scale to millions."</td>
+            <td>"All your traffic. One gateway."</td>
+            <td>"Secure environments where devs and agents work in parallel."</td>
+          </tr>
+          <tr>
+            <td>Sub-headline</td>
+            <td class="col-buoyant">"Turn any AWS Kubernetes deployment into a highly reliable, horizontally scalable platform."</td>
+            <td>"Supabase is an open source Firebase alternative."</td>
+            <td>"ngrok is an all-in-one cloud networking platform that secures, transforms, and routes your traffic to services running anywhere."</td>
+            <td>"Give developers room to build and run parallel agents inside secure, self-hosted environments."</td>
+          </tr>
+          <tr>
+            <td>Product clarity</td>
+            <td class="col-buoyant"><span class="tag tag-a">Partial</span> Assumes prior knowledge of "service mesh"</td>
+            <td><span class="tag tag-g">High</span> Sub-headline clarifies immediately</td>
+            <td><span class="tag tag-g">High</span> Self-explanatory even without sub-headline</td>
+            <td><span class="tag tag-g">High</span> "devs and agents" + "self-hosted" is concrete</td>
+          </tr>
+          <tr>
+            <td>Explicit audience</td>
+            <td class="col-buoyant"><span class="tag tag-r">None</span> User is never named in the hero</td>
+            <td><span class="tag tag-a">Implicit</span> "developers" implied, not stated</td>
+            <td><span class="tag tag-g">Yes</span> Developers + enterprise teams addressed</td>
+            <td><span class="tag tag-g">Yes</span> "developers" named explicitly</td>
+          </tr>
+          <tr>
+            <td>Concrete benefit</td>
+            <td class="col-buoyant"><span class="tag tag-a">Generic</span> "reliable, scalable" without specifics</td>
+            <td><span class="tag tag-g">Aspirational</span> "Weekend to millions" is memorable</td>
+            <td><span class="tag tag-g">Concrete</span> Replaces nginx + NLBs + VPNs + Cloudflare in one tool</td>
+            <td><span class="tag tag-g">Concrete</span> Speed + security + agent governance in one sentence</td>
+          </tr>
+          <tr>
+            <td>Platform risk</td>
+            <td class="col-buoyant"><span class="tag tag-r">High</span> "for AWS" excludes GKE, AKS, on-prem from the first line</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Score</td>
+            <td class="col-buoyant"><div class="dots"><div class="dot r"></div><div class="dot r"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><span class="score-label">2/5</span></td>
+            <td><div class="dots"><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div></div><span class="score-label">5/5</span></td>
+            <td><div class="dots"><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div><div class="dot"></div></div><span class="score-label">4/5</span></td>
+            <td><div class="dots"><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div><div class="dot"></div></div><span class="score-label">4/5</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="insight warn">Buoyant's hero anchors to AWS from line one and assumes the visitor already knows what a service mesh is. ngrok's "All your traffic. One gateway." is the strongest headline in this set — instantly clear without needing a sub-headline. Coder's headline is longer but earns it by naming a specific, timely use case (devs + agents working in parallel).</div>
+  </div>
+
+  <!-- NAV -->
+  <div id="nav" class="panel">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:15%">Criterion</th>
+            <th class="col-buoyant" style="width:21.25%">Buoyant</th>
+            <th style="width:21.25%">Supabase</th>
+            <th style="width:21.25%">ngrok</th>
+            <th style="width:21.25%">Coder</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Nav items</td>
+            <td class="col-buoyant">Product / Solutions / Pricing / Resources / Academy / About</td>
+            <td>Product / Developers / Solutions / Pricing / Docs / Blog</td>
+            <td>Product / Problems We Solve / Resources / Docs / Blog / Pricing / Download</td>
+            <td>Solutions / Docs / Industries / Resources / Pricing / Community</td>
+          </tr>
+          <tr>
+            <td>Item count</td>
+            <td class="col-buoyant"><span class="tag tag-a">6 items</span> with deep submenus</td>
+            <td><span class="tag tag-a">6 items</span> clean hierarchy</td>
+            <td><span class="tag tag-r">7 items</span> + very deep submenus</td>
+            <td><span class="tag tag-a">6 items</span></td>
+          </tr>
+          <tr>
+            <td>Pricing visible</td>
+            <td class="col-buoyant"><span class="tag tag-g">Yes</span></td>
+            <td><span class="tag tag-g">Yes</span></td>
+            <td><span class="tag tag-g">Yes</span></td>
+            <td><span class="tag tag-g">Yes</span></td>
+          </tr>
+          <tr>
+            <td>Docs accessible</td>
+            <td class="col-buoyant"><span class="tag tag-a">Outside nav</span> "Docs" is a secondary button next to "Book a call" — not a nav item</td>
+            <td><span class="tag tag-g">In nav</span> Explicit "Docs" item</td>
+            <td><span class="tag tag-g">In nav</span> Explicit "Docs" item</td>
+            <td><span class="tag tag-g">In nav</span> Explicit "Docs" item</td>
+          </tr>
+          <tr>
+            <td>Notable issues</td>
+            <td class="col-buoyant">"Academy" purpose unclear without clicking. Docs buried outside the nav. Submenus are very deep.</td>
+            <td>"Developers" bundles docs + guides cleanly. "Solutions" and "Product" could overlap conceptually.</td>
+            <td>Deepest submenu structure of all four sites. "Problems We Solve" is unusual naming but effective.</td>
+            <td>"Industries" as a top-level item is uncommon — usually nested in Solutions. Otherwise clean.</td>
+          </tr>
+          <tr>
+            <td>Score</td>
+            <td class="col-buoyant"><div class="dots"><div class="dot r"></div><div class="dot r"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><span class="score-label">2/5</span></td>
+            <td><div class="dots"><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div><div class="dot"></div></div><span class="score-label">4/5</span></td>
+            <td><div class="dots"><div class="dot b"></div><div class="dot b"></div><div class="dot b"></div><div class="dot"></div><div class="dot"></div></div><span class="score-label">3/5</span></td>
+            <td><div class="dots"><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div><div class="dot"></div></div><span class="score-label">4/5</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="insight warn">All four sites have 6–7 nav items, so item count isn't the key differentiator here. Buoyant's main weakness is that Docs — the most critical resource for any developer evaluating the product — is not in the nav at all. It's a secondary button alongside "Book a call". Every single competitor puts Docs directly in the nav as a first-class item.</div>
+  </div>
+
+  <!-- CTAs -->
+  <div id="cta" class="panel">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:15%">Criterion</th>
+            <th class="col-buoyant" style="width:21.25%">Buoyant</th>
+            <th style="width:21.25%">Supabase</th>
+            <th style="width:21.25%">ngrok</th>
+            <th style="width:21.25%">Coder</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Primary hero CTA</td>
+            <td class="col-buoyant">"Get started" → leads to docs</td>
+            <td>"Start your project" → direct dashboard</td>
+            <td>"Get started (for free)" → signup</td>
+            <td>"Install Coder" → docs install page</td>
+          </tr>
+          <tr>
+            <td>Secondary hero CTA</td>
+            <td class="col-buoyant">"Learn more" → migration page</td>
+            <td>"Request a demo" (enterprise)</td>
+            <td>"Read the docs"</td>
+            <td>"Start a trial"</td>
+          </tr>
+          <tr>
+            <td>Nav CTA</td>
+            <td class="col-buoyant"><span class="tag tag-r">"Book a call"</span> — gated to sales from first click</td>
+            <td><span class="tag tag-g">"Start your project"</span> — self-serve</td>
+            <td><span class="tag tag-g">"Sign up"</span> — self-serve</td>
+            <td><span class="tag tag-a">"Get a demo"</span> — also gated to sales</td>
+          </tr>
+          <tr>
+            <td>Self-serve path</td>
+            <td class="col-buoyant"><span class="tag tag-a">With friction</span> "Get started" lands on docs, not a dashboard or signup flow</td>
+            <td><span class="tag tag-g">Yes</span> Immediate dashboard, no barriers</td>
+            <td><span class="tag tag-g">Yes</span> Free tier, direct signup</td>
+            <td><span class="tag tag-a">Partial</span> "Install Coder" is self-serve but technically demanding</td>
+          </tr>
+          <tr>
+            <td>Score</td>
+            <td class="col-buoyant"><div class="dots"><div class="dot r"></div><div class="dot r"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><span class="score-label">2/5</span></td>
+            <td><div class="dots"><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div></div><span class="score-label">5/5</span></td>
+            <td><div class="dots"><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div><div class="dot"></div></div><span class="score-label">4/5</span></td>
+            <td><div class="dots"><div class="dot b"></div><div class="dot b"></div><div class="dot b"></div><div class="dot"></div><div class="dot"></div></div><span class="score-label">3/5</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="insight warn">Buoyant and Coder both lead with a sales-gated nav CTA. The key difference: Coder compensates with "Install Coder" in the hero — a genuine self-serve path. Buoyant's "Get started" sounds self-serve but lands on docs, which is a friction point for anyone expecting a trial or signup. Supabase's "Start your project" → dashboard is the gold standard: zero friction, immediate value.</div>
+  </div>
+
+  <!-- SOCIAL PROOF -->
+  <div id="social" class="panel">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:15%">Criterion</th>
+            <th class="col-buoyant" style="width:21.25%">Buoyant</th>
+            <th style="width:21.25%">Supabase</th>
+            <th style="width:21.25%">ngrok</th>
+            <th style="width:21.25%">Coder</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Customer logos</td>
+            <td class="col-buoyant"><span class="tag tag-g">Yes</span> Walmart, Expedia, Comcast, GoDaddy, Xbox, Timescale</td>
+            <td><span class="tag tag-g">Yes</span> GitHub, Mozilla, PwC, 1Password</td>
+            <td><span class="tag tag-g">Strong</span> Calendly, Databricks, GitHub, Microsoft, OpenAI, Twilio, Vercel, Zoom</td>
+            <td><span class="tag tag-g">Yes</span> US DoD, Dropbox, J.B. Hunt, Palantir, Discord, Skydio</td>
+          </tr>
+          <tr>
+            <td>Testimonials</td>
+            <td class="col-buoyant"><span class="tag tag-g">Yes</span> 4 testimonials with photo, name and title</td>
+            <td><span class="tag tag-g">Yes</span> Multiple with company attribution</td>
+            <td><span class="tag tag-g">Strong</span> Mix of tweets + named enterprise quotes (Databricks, Zendesk, Copado)</td>
+            <td><span class="tag tag-g">Yes</span> Detailed success stories with quantified outcomes</td>
+          </tr>
+          <tr>
+            <td>Scale numbers</td>
+            <td class="col-buoyant"><span class="tag tag-r">None</span> No "X customers" or usage metrics anywhere on the page</td>
+            <td><span class="tag tag-a">Partial</span> Focuses on product scale, not user count</td>
+            <td><span class="tag tag-g">Yes</span> "9M+ developers"; "billions of requests/day"</td>
+            <td><span class="tag tag-g">Yes</span> "90% cost reduction", "4x faster onboarding", "2,500+ developers"</td>
+          </tr>
+          <tr>
+            <td>CNCF / OSS trust</td>
+            <td class="col-buoyant"><span class="tag tag-g">Yes</span> CNCF graduated — first service mesh ever</td>
+            <td><span class="tag tag-g">Yes</span> Open source as core identity</td>
+            <td><span class="tag tag-a">Minor</span> SOC 2 highlighted but not OSS</td>
+            <td><span class="tag tag-g">Yes</span> 119.3K GitHub stars displayed in the nav</td>
+          </tr>
+          <tr>
+            <td>Score</td>
+            <td class="col-buoyant"><div class="dots"><div class="dot b"></div><div class="dot b"></div><div class="dot b"></div><div class="dot"></div><div class="dot"></div></div><span class="score-label">3/5</span></td>
+            <td><div class="dots"><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div><div class="dot"></div></div><span class="score-label">4/5</span></td>
+            <td><div class="dots"><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div></div><span class="score-label">5/5</span></td>
+            <td><div class="dots"><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div><div class="dot"></div></div><span class="score-label">4/5</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="insight">Buoyant has solid logos and real testimonials — this is its strongest criterion. The gap vs. the others is the complete absence of quantitative scale. Coder does this best: every case study has a specific number ("90% cost reduction", "4x faster onboarding"). ngrok leads with "9M+ developers". Even one real metric above the fold would significantly strengthen Buoyant's credibility.</div>
+  </div>
+
+  <!-- TONE -->
+  <div id="tone" class="panel">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:15%">Criterion</th>
+            <th class="col-buoyant" style="width:21.25%">Buoyant</th>
+            <th style="width:21.25%">Supabase</th>
+            <th style="width:21.25%">ngrok</th>
+            <th style="width:21.25%">Coder</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Primary audience</td>
+            <td class="col-buoyant">Platform engineers / SREs / enterprise</td>
+            <td>Developers (indie + startup)</td>
+            <td>Developers + enterprise (clearly both)</td>
+            <td>Platform teams + enterprise CISOs + government</td>
+          </tr>
+          <tr>
+            <td>Overall tone</td>
+            <td class="col-buoyant">Technical, formal, serious</td>
+            <td>Aspirational, community-driven, friendly</td>
+            <td>Pragmatic, direct, developer-first with enterprise credibility</td>
+            <td>Technical + enterprise, security-forward, confident</td>
+          </tr>
+          <tr>
+            <td>Unexplained jargon</td>
+            <td class="col-buoyant"><span class="tag tag-r">High</span> "service mesh", "mTLS", "HAZL", "sidecar" used without definition in the hero section</td>
+            <td><span class="tag tag-g">Low</span> Technical concepts explained in context</td>
+            <td><span class="tag tag-g">Low</span> Replaces jargon with concrete alternatives ("instead of nginx + NLBs + VPNs")</td>
+            <td><span class="tag tag-a">Medium</span> "CDE", "ATO compliance" appear without definition, but outcomes are always stated first</td>
+          </tr>
+          <tr>
+            <td>Benefit vs feature</td>
+            <td class="col-buoyant"><span class="tag tag-a">Mixed</span> "zero trust security" (benefit) alongside "Rust data plane" (feature) at the same level</td>
+            <td><span class="tag tag-g">Benefit first</span> "Build in a weekend" before any technical detail</td>
+            <td><span class="tag tag-g">Benefit first</span> Pain stated first ("instead of nginx + NLBs…"), then solution</td>
+            <td><span class="tag tag-g">Benefit first</span> Outcomes ("90% cost reduction") shown before architecture</td>
+          </tr>
+          <tr>
+            <td>Score</td>
+            <td class="col-buoyant"><div class="dots"><div class="dot r"></div><div class="dot r"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><span class="score-label">2/5</span></td>
+            <td><div class="dots"><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div></div><span class="score-label">5/5</span></td>
+            <td><div class="dots"><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div></div><span class="score-label">5/5</span></td>
+            <td><div class="dots"><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div><div class="dot g"></div><div class="dot"></div></div><span class="score-label">4/5</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="insight warn">ngrok is the most instructive benchmark for Buoyant. Both serve technical audiences, but ngrok leads with the pain ("instead of a hodgepodge of nginx, NLBs, VPNs, model routers, and Cloudflare") before presenting the solution. Buoyant leads with the solution category ("service mesh") before the visitor understands why they need one. The fix isn't simpler content — it's a reorder: pain first, solution second, technology third.</div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="section-label">Priority action items for Buoyant</div>
+
+  <div class="action">
+    <div class="action-n">1</div>
+    <div>
+      <div class="action-title">Rewrite the hero headline to lead with pain, not product category</div>
+      <div class="action-desc">Current: "The best service mesh for AWS" — assumes the visitor knows what a service mesh is and has already chosen AWS. Proposed direction: "Zero-trust security and reliability for every Kubernetes app — without changing your code." Lead with the outcome, explain the technology below the fold. ngrok's approach ("instead of nginx + NLBs + VPNs…") is the best model in this comparison set.</div>
+    </div>
+  </div>
+
+  <div class="action">
+    <div class="action-n">2</div>
+    <div>
+      <div class="action-title">Move Docs into the main nav</div>
+      <div class="action-desc">Every competitor has Docs as a first-class nav item. For a product that requires technical evaluation before purchase, Docs is the most important page on the site for developers. Currently it's a secondary button next to "Book a call" — easy to miss and signals the wrong priority to the core audience.</div>
+    </div>
+  </div>
+
+  <div class="action">
+    <div class="action-n">3</div>
+    <div>
+      <div class="action-title">Replace "Book a call" as the primary nav CTA with a self-serve path</div>
+      <div class="action-desc">"Book a call" as the first action gates every non-enterprise visitor to a sales conversation they're not ready for. Adding "Get started free" or "Try Linkerd" as the primary CTA — with "Book a call" as secondary — unlocks the developer-led evaluation funnel. Note: Coder also uses "Get a demo" as its nav CTA but compensates with "Install Coder" as a direct hero path.</div>
+    </div>
+  </div>
+
+  <div class="action">
+    <div class="action-n">4</div>
+    <div>
+      <div class="action-title">Add at least one quantitative scale number above the fold</div>
+      <div class="action-desc">ngrok shows "9M+ developers". Coder's case studies show "90% cost reduction" and "4x faster onboarding". Buoyant has strong logos (Walmart, Xbox) but zero numbers. Even a single real metric — "protecting X billion requests/day" or "trusted by N+ platform teams" — would significantly close the credibility gap with competitors.</div>
+    </div>
+  </div>
+
+  <div class="action">
+    <div class="action-n">5</div>
+    <div>
+      <div class="action-title">Make the hero platform-agnostic — move AWS focus to its dedicated landing page</div>
+      <div class="action-desc">"The best service mesh for AWS" excludes every visitor on GKE, AKS, on-prem, or multi-cloud from the very first line. An AWS-specific page already exists on the site. The homepage should speak to the full addressable audience — AWS can appear as one of several logos or use cases below the fold.</div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  Generated with Claude · buoyant.io · April 2026 · v2 verified from source HTML
+</footer>
+
+<script>
+  function show(id, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+</script>
+
+</body>
+</html>
