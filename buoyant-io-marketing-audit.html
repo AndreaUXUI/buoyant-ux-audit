@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buoyant.io Marketing Audit — April 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue:       #1d4ed8;
+    --blue-light: #dbeafe;
+    --blue-mid:   #3b82f6;
+    --green:      #059669;
+    --green-light:#d1fae5;
+    --amber:      #d97706;
+    --amber-light:#fef3c7;
+    --red:        #dc2626;
+    --red-light:  #fee2e2;
+    --slate-900:  #0f172a;
+    --slate-800:  #1e293b;
+    --slate-700:  #334155;
+    --slate-600:  #475569;
+    --slate-400:  #94a3b8;
+    --slate-200:  #e2e8f0;
+    --slate-100:  #f1f5f9;
+    --slate-50:   #f8fafc;
+    --white:      #ffffff;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--slate-50);
+    color: var(--slate-800);
+    line-height: 1.6;
+    font-size: 15px;
+  }
+
+  /* ─── COVER ─────────────────────────────────────────────── */
+  .cover {
+    background: linear-gradient(135deg, var(--slate-900) 0%, #1e3a5f 60%, #0e4a8c 100%);
+    color: var(--white);
+    padding: 80px 60px 70px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -120px; right: -120px;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: rgba(59,130,246,.12);
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -80px;
+    width: 350px; height: 350px;
+    border-radius: 50%;
+    background: rgba(59,130,246,.07);
+  }
+  .cover-inner { position: relative; z-index: 1; max-width: 900px; }
+  .cover-label {
+    font-size: 12px; font-weight: 600; letter-spacing: .12em;
+    text-transform: uppercase; color: #93c5fd; margin-bottom: 18px;
+  }
+  .cover h1 {
+    font-size: 48px; font-weight: 800; line-height: 1.1;
+    margin-bottom: 20px; letter-spacing: -.02em;
+  }
+  .cover h1 span { color: #60a5fa; }
+  .cover-meta {
+    display: flex; gap: 32px; margin-top: 32px; flex-wrap: wrap;
+  }
+  .cover-meta-item { font-size: 13px; color: #94a3b8; }
+  .cover-meta-item strong { display: block; color: #e2e8f0; font-size: 15px; margin-bottom: 2px; }
+
+  /* ─── LAYOUT ─────────────────────────────────────────────── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 40px; }
+
+  /* ─── TOC ─────────────────────────────────────────────────── */
+  .toc-wrapper {
+    background: var(--white);
+    border-bottom: 1px solid var(--slate-200);
+    padding: 28px 0;
+  }
+  .toc {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 8px;
+  }
+  .toc a {
+    font-size: 13px; color: var(--slate-600);
+    text-decoration: none; padding: 6px 10px;
+    border-radius: 6px; display: flex; align-items: center; gap: 8px;
+    transition: background .15s, color .15s;
+  }
+  .toc a:hover { background: var(--blue-light); color: var(--blue); }
+  .toc a span.num {
+    font-weight: 700; color: var(--blue-mid); font-size: 11px;
+    min-width: 18px;
+  }
+  .toc-title { font-size: 11px; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--slate-400); margin-bottom: 12px; }
+
+  /* ─── SECTIONS ───────────────────────────────────────────── */
+  .section {
+    padding: 56px 0 48px;
+    border-bottom: 1px solid var(--slate-200);
+  }
+  .section:last-child { border-bottom: none; }
+
+  .section-header {
+    display: flex; align-items: flex-start; gap: 16px; margin-bottom: 32px;
+  }
+  .section-num {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--blue-light); color: var(--blue);
+    font-weight: 800; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 3px;
+  }
+  .section-header h2 {
+    font-size: 26px; font-weight: 800; color: var(--slate-900);
+    letter-spacing: -.02em; line-height: 1.2;
+  }
+  .section-header p {
+    font-size: 14px; color: var(--slate-500); margin-top: 4px;
+  }
+
+  h3 {
+    font-size: 17px; font-weight: 700; color: var(--slate-800);
+    margin: 32px 0 12px; letter-spacing: -.01em;
+  }
+  h3:first-child { margin-top: 0; }
+
+  p { margin-bottom: 14px; color: var(--slate-700); }
+  p:last-child { margin-bottom: 0; }
+
+  /* ─── STAT CARDS ──────────────────────────────────────────── */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px; margin-bottom: 36px;
+  }
+  .stat-card {
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    border-radius: 12px; padding: 20px 22px;
+  }
+  .stat-card.red   { border-color: #fca5a5; background: #fff5f5; }
+  .stat-card.amber { border-color: #fcd34d; background: #fffbeb; }
+  .stat-card.green { border-color: #6ee7b7; background: #f0fdf4; }
+  .stat-card.blue  { border-color: #93c5fd; background: #eff6ff; }
+  .stat-label { font-size: 11px; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--slate-400); margin-bottom: 6px; }
+  .stat-value { font-size: 30px; font-weight: 800; letter-spacing: -.03em; color: var(--slate-900); }
+  .stat-card.red .stat-value   { color: var(--red); }
+  .stat-card.amber .stat-value { color: var(--amber); }
+  .stat-card.green .stat-value { color: var(--green); }
+  .stat-card.blue .stat-value  { color: var(--blue); }
+  .stat-sub { font-size: 12px; color: var(--slate-500); margin-top: 4px; }
+
+  /* ─── CHART CONTAINERS ───────────────────────────────────── */
+  .chart-wrap {
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    border-radius: 14px; padding: 28px 28px 20px;
+    margin: 24px 0;
+  }
+  .chart-title {
+    font-size: 14px; font-weight: 700; color: var(--slate-700); margin-bottom: 4px;
+  }
+  .chart-sub { font-size: 12px; color: var(--slate-400); margin-bottom: 20px; }
+  .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 760px) { .chart-grid { grid-template-columns: 1fr; } }
+  .chart-full { /* full width */ }
+
+  /* ─── TABLES ─────────────────────────────────────────────── */
+  .data-table {
+    width: 100%; border-collapse: collapse; font-size: 13px;
+    background: var(--white); border: 1px solid var(--slate-200);
+    border-radius: 12px; overflow: hidden; margin: 20px 0;
+  }
+  .data-table th {
+    background: var(--slate-800); color: var(--white);
+    padding: 11px 14px; text-align: left; font-size: 11px;
+    font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .data-table td {
+    padding: 10px 14px; border-bottom: 1px solid var(--slate-100);
+    color: var(--slate-700);
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: var(--slate-50); }
+  .data-table .mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+
+  /* inline bar within table */
+  .bar-cell { display: flex; align-items: center; gap: 8px; }
+  .bar-bg { flex: 1; background: var(--slate-100); border-radius: 4px; height: 8px; min-width: 60px; }
+  .bar-fill { height: 8px; border-radius: 4px; background: var(--blue-mid); }
+  .bar-fill.green { background: var(--green); }
+  .bar-fill.red { background: var(--red); }
+  .bar-fill.amber { background: var(--amber); }
+
+  /* ─── CALLOUT / FINDING BOXES ─────────────────────────────── */
+  .finding {
+    border-radius: 10px; padding: 16px 18px;
+    margin: 16px 0; font-size: 14px;
+  }
+  .finding.red    { background: var(--red-light);   border-left: 4px solid var(--red);   }
+  .finding.amber  { background: var(--amber-light);  border-left: 4px solid var(--amber); }
+  .finding.green  { background: var(--green-light);  border-left: 4px solid var(--green); }
+  .finding.blue   { background: var(--blue-light);   border-left: 4px solid var(--blue);  }
+  .finding strong { display: block; font-weight: 700; margin-bottom: 4px; font-size: 13px; }
+  .finding.red strong    { color: var(--red);   }
+  .finding.amber strong  { color: var(--amber); }
+  .finding.green strong  { color: var(--green); }
+  .finding.blue strong   { color: var(--blue);  }
+
+  /* ─── BADGE ──────────────────────────────────────────────── */
+  .badge {
+    display: inline-flex; align-items: center;
+    font-size: 11px; font-weight: 600; letter-spacing: .04em;
+    padding: 3px 9px; border-radius: 99px;
+  }
+  .badge.red    { background: var(--red-light);   color: var(--red);   }
+  .badge.amber  { background: var(--amber-light);  color: var(--amber); }
+  .badge.green  { background: var(--green-light);  color: var(--green); }
+  .badge.blue   { background: var(--blue-light);   color: var(--blue);  }
+  .badge.gray   { background: var(--slate-100);    color: var(--slate-600); }
+
+  /* ─── PRIORITY TIERS ─────────────────────────────────────── */
+  .tier { margin: 20px 0; }
+  .tier-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 18px; border-radius: 10px 10px 0 0;
+    font-weight: 700; font-size: 14px;
+  }
+  .tier-1 .tier-header { background: #fef2f2; color: var(--red); border: 1px solid #fca5a5; }
+  .tier-2 .tier-header { background: #fffbeb; color: #b45309; border: 1px solid #fcd34d; }
+  .tier-3 .tier-header { background: #eff6ff; color: var(--blue); border: 1px solid #93c5fd; }
+  .tier-4 .tier-header { background: var(--slate-100); color: var(--slate-600); border: 1px solid var(--slate-200); }
+  .tier-body {
+    border-radius: 0 0 10px 10px;
+    border: 1px solid var(--slate-200); border-top: none;
+    overflow: hidden;
+  }
+  .tier-item {
+    display: grid; grid-template-columns: 28px 1fr auto;
+    gap: 12px; align-items: start;
+    padding: 14px 18px; border-bottom: 1px solid var(--slate-100);
+    font-size: 13px; background: var(--white);
+  }
+  .tier-item:last-child { border-bottom: none; }
+  .tier-num {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--slate-100); color: var(--slate-500);
+    font-weight: 700; font-size: 11px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .tier-item-title { font-weight: 600; color: var(--slate-800); margin-bottom: 3px; }
+  .tier-item-body  { color: var(--slate-500); font-size: 12px; }
+  .tier-item-impact { text-align: right; white-space: nowrap; }
+
+  /* ─── GEO CHECKLIST ─────────────────────────────────────── */
+  .checklist { list-style: none; }
+  .checklist li {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 0; border-bottom: 1px solid var(--slate-100);
+    font-size: 13px;
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .check-icon {
+    width: 20px; height: 20px; border-radius: 50%;
+    flex-shrink: 0; margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700;
+  }
+  .check-icon.pass { background: var(--green-light); color: var(--green); }
+  .check-icon.fail { background: var(--red-light);   color: var(--red);   }
+  .check-icon.warn { background: var(--amber-light);  color: var(--amber); }
+  .check-text strong { color: var(--slate-800); font-weight: 600; }
+  .check-text span   { color: var(--slate-500); display: block; font-size: 12px; margin-top: 1px; }
+
+  /* ─── TWO-COL ────────────────────────────────────────────── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* ─── FOOTER ─────────────────────────────────────────────── */
+  footer {
+    background: var(--slate-800); color: var(--slate-400);
+    text-align: center; padding: 24px;
+    font-size: 12px;
+  }
+  footer strong { color: var(--slate-200); }
+
+  /* ─── SCROLL UTIL ─────────────────────────────────────────── */
+  html { scroll-behavior: smooth; }
+  [id] { scroll-margin-top: 24px; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ COVER ═══════════ -->
+<div class="cover">
+  <div class="cover-inner">
+    <div class="cover-label">Marketing Audit &amp; Analysis</div>
+    <h1>buoyant.io<br><span>Comprehensive Marketing Audit</span></h1>
+    <p style="color:#cbd5e1;max-width:600px;font-size:16px;line-height:1.6;margin-top:12px;">
+      An in-depth audit of traffic performance, conversion rates, messaging,
+      SEO, AI engine visibility, and go-to-market strategy — with prioritized
+      recommendations for the marketing and GTM teams.
+    </p>
+    <div class="cover-meta">
+      <div class="cover-meta-item"><strong>Prepared for</strong>Buoyant Marketing &amp; GTM Teams</div>
+      <div class="cover-meta-item"><strong>Date</strong>April 23, 2026</div>
+      <div class="cover-meta-item"><strong>Data range</strong>Jan 1, 2025 – Apr 23, 2026</div>
+      <div class="cover-meta-item"><strong>Scope</strong>Full domain incl. docs, academy, blog</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ TABLE OF CONTENTS ═══════════ -->
+<div class="toc-wrapper">
+  <div class="container">
+    <div class="toc-title">Contents</div>
+    <nav class="toc">
+      <a href="#exec-summary"><span class="num">01</span>Executive Summary</a>
+      <a href="#traffic"><span class="num">02</span>Traffic &amp; Analytics</a>
+      <a href="#cro"><span class="num">03</span>Conversion Rate (CRO)</a>
+      <a href="#messaging"><span class="num">04</span>Messaging &amp; Positioning</a>
+      <a href="#seo"><span class="num">05</span>SEO Analysis</a>
+      <a href="#geo"><span class="num">06</span>AI Engine Visibility (GEO)</a>
+      <a href="#content"><span class="num">07</span>Content Marketing</a>
+      <a href="#techseo"><span class="num">08</span>Technical SEO</a>
+      <a href="#competitive"><span class="num">09</span>Competitive Positioning</a>
+      <a href="#bestpractices"><span class="num">10</span>Marketing Best Practices</a>
+      <a href="#priorities"><span class="num">11</span>Priority Recommendations</a>
+    </nav>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ═══════════ 01 EXECUTIVE SUMMARY ═══════════ -->
+<section class="section" id="exec-summary">
+  <div class="section-header">
+    <div class="section-num">01</div>
+    <div>
+      <h2>Executive Summary</h2>
+      <p>The site is generating traffic. It is not generating leads.</p>
+    </div>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card blue">
+      <div class="stat-label">Monthly Sessions (avg)</div>
+      <div class="stat-value">52K</div>
+      <div class="stat-sub">~806K over 15.5 months</div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-label">Homepage Conv. Rate</div>
+      <div class="stat-value">0.07%</div>
+      <div class="stat-sub">198K sessions → ~131 key events</div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-label">B2B SaaS Benchmark Gap</div>
+      <div class="stat-value">10–30×</div>
+      <div class="stat-sub">Typical benchmark: 1–3%</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-label">Top Converting Asset</div>
+      <div class="stat-value">7.04%</div>
+      <div class="stat-sub">Enterprise guide ebook (23 sessions/mo)</div>
+    </div>
+    <div class="stat-card amber">
+      <div class="stat-label">Best Channel</div>
+      <div class="stat-value">Email</div>
+      <div class="stat-sub">1.46% key event rate, only 1.5% of traffic</div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-label">Worst Paid Channel</div>
+      <div class="stat-value">0.02%</div>
+      <div class="stat-sub">Paid Social — 72% bounce, minimal return</div>
+    </div>
+  </div>
+
+  <div class="finding red">
+    <strong>Root Cause #1: Conversion infrastructure is broken</strong>
+    Most high-traffic pages lack effective conversion elements. The homepage, mTLS guide, comparison pages, and case studies all end with a generic "get started" link to documentation — not a commercial action.
+  </div>
+  <div class="finding amber">
+    <strong>Root Cause #2: Messaging is too narrow for the buyer</strong>
+    "The best service mesh for AWS" positions the product for a subset of the ICP and speaks only to technical users. Buyer-facing messaging (ROI, risk, compliance outcomes) is underrepresented across the site.
+  </div>
+  <div class="finding amber">
+    <strong>Root Cause #3: No middle-of-funnel bridge</strong>
+    Excellent TOFU content (mTLS, service mesh explainers) drives real organic traffic but there is no journey connecting that awareness to a commercial action. Visitors learn and leave.
+  </div>
+  <div class="finding green">
+    <strong>The opportunity is significant and largely unlocked through existing assets</strong>
+    The site's best-converting asset (enterprise guide ebook, 7.04%) receives only ~23 sessions/month. It is not linked from the homepage, product page, or comparison pages. Zero new content required to fix this.
+  </div>
+</section>
+
+<!-- ═══════════ 02 TRAFFIC ═══════════ -->
+<section class="section" id="traffic">
+  <div class="section-header">
+    <div class="section-num">02</div>
+    <div>
+      <h2>Traffic &amp; Analytics Analysis</h2>
+      <p>Jan 2025 – Apr 2026 · Google Analytics 4 · All channels</p>
+    </div>
+  </div>
+
+  <h3>2.1 Channel Mix — Sessions &amp; Conversion Rate</h3>
+  <p>Direct traffic dominates at 50% of sessions but converts poorly. Email is the only channel approaching acceptable B2B conversion rates.</p>
+
+  <div class="chart-grid">
+    <div class="chart-wrap">
+      <div class="chart-title">Sessions by Channel</div>
+      <div class="chart-sub">Total sessions, Jan 2025 – Apr 2026</div>
+      <canvas id="channelSessions" height="260"></canvas>
+    </div>
+    <div class="chart-wrap">
+      <div class="chart-title">Key Event Rate by Channel</div>
+      <div class="chart-sub">% of sessions that produce a form submission / key event</div>
+      <canvas id="channelConv" height="260"></canvas>
+    </div>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Channel</th>
+        <th>Sessions</th>
+        <th>Share</th>
+        <th>Engagement Rate</th>
+        <th>Key Event Rate</th>
+        <th>Bounce Rate</th>
+        <th>Assessment</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Direct</strong></td>
+        <td>404,636</td>
+        <td>50.1%</td>
+        <td>36.9%</td>
+        <td><span class="badge amber">0.18%</span></td>
+        <td>63.1%</td>
+        <td>High volume, low conversion</td>
+      </tr>
+      <tr>
+        <td><strong>Organic Search</strong></td>
+        <td>256,426</td>
+        <td>31.8%</td>
+        <td>54.3%</td>
+        <td><span class="badge red">0.049%</span></td>
+        <td>45.7%</td>
+        <td>Strong traffic, informational intent</td>
+      </tr>
+      <tr>
+        <td><strong>Referral</strong></td>
+        <td>71,382</td>
+        <td>8.8%</td>
+        <td>52.5%</td>
+        <td><span class="badge amber">0.26%</span></td>
+        <td>47.5%</td>
+        <td>Good engagement, moderate conversion</td>
+      </tr>
+      <tr>
+        <td><strong>Paid Search</strong></td>
+        <td>20,779</td>
+        <td>2.6%</td>
+        <td>79.3%</td>
+        <td><span class="badge red">0.033%</span></td>
+        <td>20.7%</td>
+        <td>High engagement, poor conversion landing</td>
+      </tr>
+      <tr>
+        <td><strong>Email</strong></td>
+        <td>12,095</td>
+        <td>1.5%</td>
+        <td>51.6%</td>
+        <td><span class="badge green">1.46%</span></td>
+        <td>48.4%</td>
+        <td><strong>Best channel — massively underinvested</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Organic Social</strong></td>
+        <td>11,538</td>
+        <td>1.4%</td>
+        <td>29.5%</td>
+        <td><span class="badge red">0.043%</span></td>
+        <td>70.5%</td>
+        <td>Low quality traffic, poor ROI</td>
+      </tr>
+      <tr>
+        <td><strong>Paid Social</strong></td>
+        <td>8,518</td>
+        <td>1.1%</td>
+        <td>27.9%</td>
+        <td><span class="badge red">0.020%</span></td>
+        <td>72.1%</td>
+        <td>Worst paid channel — consider pausing</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>2.2 Top Landing Pages — Traffic vs. Conversion</h3>
+  <p>The scatter below maps each significant landing page by monthly sessions (x-axis) against its key event rate (y-axis). Pages in the upper-right are high-traffic, high-converting. The homepage is the most critical outlier: enormous traffic, almost zero conversion.</p>
+
+  <div class="chart-wrap chart-full">
+    <div class="chart-title">Landing Page Performance — Sessions vs. Key Event Rate</div>
+    <div class="chart-sub">Bubble size = relative sessions. Upper-right = ideal. Lower-right = conversion problem.</div>
+    <canvas id="landingBubble" height="320"></canvas>
+  </div>
+
+  <h3>2.3 Anomalous Case Study Traffic</h3>
+  <div class="finding amber">
+    <strong>Xbox / Schenker / Adidas case studies show a suspicious traffic pattern</strong>
+    All three receive nearly identical session counts (~29–30K), with 98–100% new users and only 4.7–4.9 seconds of average engagement. The Zscaler case study — with 19.9s engagement and a 0.55% key event rate — behaves like genuine traffic. The three anomalous studies together represent ~90,000 sessions per period with near-zero conversions.
+    <br><br>
+    <strong>Action required:</strong> Filter these landing pages by channel/source in GA4. If traffic is low-intent referral (CNCF widget, directory embed), exclude from KPI reporting. If it is genuine, add conversion elements immediately — even a 0.5% rate from this volume would generate ~450 additional leads.
+  </div>
+</section>
+
+<!-- ═══════════ 03 CRO ═══════════ -->
+<section class="section" id="cro">
+  <div class="section-header">
+    <div class="section-num">03</div>
+    <div>
+      <h2>Conversion Rate Optimization</h2>
+      <p>Why visitors aren't becoming leads — and how to change that</p>
+    </div>
+  </div>
+
+  <h3>3.1 Top Converting Pages (by Session Key Event Rate)</h3>
+  <p>These are the pages currently doing the most commercial work. The gap between the top performer (7%) and the homepage (0.07%) defines the opportunity.</p>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Session Key Event Rate by Page (minimum 300 sessions)</div>
+    <div class="chart-sub">Higher is better. Industry benchmark for B2B lead capture: 1–3%</div>
+    <canvas id="convByPage" height="280"></canvas>
+  </div>
+
+  <div class="finding red">
+    <strong>The enterprise guide ebook converts at 7% but gets only ~23 sessions/month</strong>
+    This is the site's single most effective conversion asset and it is nearly invisible. It is not linked from the homepage, the product page, or either comparison page. Routing an additional 200 sessions/month to it would generate ~14 additional leads with zero new content creation.
+  </div>
+
+  <h3>3.2 Homepage Conversion Failure</h3>
+  <div class="two-col">
+    <div>
+      <p><strong>CTA overload with no hierarchy.</strong> The homepage presents seven or more calls-to-action ("Get started," "Learn more," "Book a call," "Enroll now!," "Book a meeting," and others). When everything is a priority, nothing is. There is no single dominant primary action.</p>
+      <p><strong>"Get started" links to documentation, not a form.</strong> The primary hero CTA sends visitors to installation docs. For a platform engineer, this is fine. For a VP of Engineering building a business case, it is an immediate dead end.</p>
+    </div>
+    <div>
+      <p><strong>No above-the-fold buyer pathway.</strong> The hero assumes the visitor knows what a service mesh is and why they need one. Buyers — VPs and Directors — need outcome language: cost, reliability, compliance, risk reduction.</p>
+      <p><strong>Social proof is present but disconnected.</strong> Strong customer logos and testimonials appear — but are not paired with a conversion action at the moment of maximum trust.</p>
+    </div>
+  </div>
+
+  <h3>3.3 The "Last Mile" Problem on Content Pages</h3>
+  <p>Every major content page ends with the same generic "Get started with Buoyant Enterprise for Linkerd — Download and install in minutes." This is a docs link. A visitor who just read a 3,500-word guide on mTLS is a qualified prospect who deserves a contextually relevant offer — not a CLI command.</p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Page</th>
+        <th>Sessions/period</th>
+        <th>Key Event Rate</th>
+        <th>Current End CTA</th>
+        <th>Recommended CTA</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="mono">/mtls-guide</td>
+        <td>7,081</td>
+        <td><span class="badge amber">0.18%</span></td>
+        <td>"Get started" → docs</td>
+        <td>"Download mTLS implementation checklist"</td>
+      </tr>
+      <tr>
+        <td class="mono">/what-is-a-service-mesh</td>
+        <td>13,124</td>
+        <td><span class="badge red">0.091%</span></td>
+        <td>"Get started" → docs</td>
+        <td>"See Linkerd in a 20-min demo" or gated ebook</td>
+      </tr>
+      <tr>
+        <td class="mono">/linkerd-vs-istio</td>
+        <td>5,929</td>
+        <td><span class="badge amber">0.22%</span></td>
+        <td>Newsletter + "Get started"</td>
+        <td>"Schedule a Linkerd vs Istio bake-off"</td>
+      </tr>
+      <tr>
+        <td class="mono">/zero-trust-in-kubernetes</td>
+        <td>797</td>
+        <td><span class="badge amber">0.50%</span></td>
+        <td>Newsletter + "Get started"</td>
+        <td>"Download the Zero Trust Reference Architecture"</td>
+      </tr>
+      <tr>
+        <td class="mono">/fips-kubernetes-service-mesh</td>
+        <td>10,394</td>
+        <td><span class="badge amber">0.63%</span></td>
+        <td>"Book a live FIPS demo"</td>
+        <td>Good — add mid-page inline form to reduce scroll</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>3.4 Pricing Page Friction</h3>
+  <div class="finding amber">
+    <strong>No pricing displayed, and CTA language is passive</strong>
+    All three tiers use "Discuss Basic / Premium / Strategic" — neutral language that doesn't create urgency. Consider "Schedule a 20-min pricing call" or add ballpark figures ("scales with cluster count") so prospects can self-qualify before contacting sales. The pricing page converts at 1.07% — the highest of any commercial page with real traffic — yet receives only 1,965 sessions. More traffic + less friction = significant upside.
+  </div>
+</section>
+
+<!-- ═══════════ 04 MESSAGING ═══════════ -->
+<section class="section" id="messaging">
+  <div class="section-header">
+    <div class="section-num">04</div>
+    <div>
+      <h2>Messaging &amp; Positioning</h2>
+      <p>What the site says, who it's speaking to, and what's missing</p>
+    </div>
+  </div>
+
+  <h3>4.1 Homepage Headline Is Too Narrow</h3>
+  <div class="two-col">
+    <div class="chart-wrap" style="margin:0;">
+      <div class="chart-title" style="color:var(--red)">Current</div>
+      <p style="font-size:22px;font-weight:800;color:var(--slate-900);margin:12px 0 4px;line-height:1.3;">"The best service mesh for <span style="color:var(--blue)">AWS</span>"</p>
+      <p style="font-size:13px;color:var(--slate-500)">Excludes GCP, AKS, on-prem, and multi-cloud prospects. Positions as infrastructure tooling rather than strategic capability.</p>
+    </div>
+    <div class="chart-wrap" style="margin:0;">
+      <div class="chart-title" style="color:var(--green)">Suggested Directions to Test</div>
+      <ul style="list-style:none;padding:0;margin-top:12px;">
+        <li style="padding:8px 0;border-bottom:1px solid var(--slate-100);font-size:13px;font-weight:600;color:var(--slate-800);">"The enterprise service mesh that actually works — and stays that way"</li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--slate-100);font-size:13px;font-weight:600;color:var(--slate-800);">"Security, reliability, and observability for every Kubernetes workload"</li>
+        <li style="padding:8px 0;font-size:13px;font-weight:600;color:var(--slate-800);">"The only service mesh built for teams who can't afford downtime"</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>4.2 Buyer vs. User Messaging Gap</h3>
+  <p>The site excels at speaking to platform engineers and DevOps practitioners. The buyer audience — VPs and Directors of Engineering — needs different signals to justify a purchase:</p>
+  <table class="data-table" style="margin-top:12px;">
+    <thead>
+      <tr><th>Buyer Question</th><th>Current Coverage</th><th>Gap</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>What risk goes away if I buy this?</td>
+        <td>Technical features (mTLS, CVE remediation)</td>
+        <td>No business-risk language (breach cost, compliance failure penalty)</td>
+      </tr>
+      <tr>
+        <td>What's the ROI?</td>
+        <td>Xbox: "thousands/month" saved — buried in case study</td>
+        <td>No dedicated ROI page or TCO calculator</td>
+      </tr>
+      <tr>
+        <td>How fast can my team implement this?</td>
+        <td>"Running in minutes" (technical framing)</td>
+        <td>No implementation timeline, no onboarding story for buyers</td>
+      </tr>
+      <tr>
+        <td>What do customers like me say?</td>
+        <td>Xbox, Walmart, Expedia logos</td>
+        <td>Case studies not linked from the buyer journey (product/pricing pages)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>4.3 Underused Differentiators</h3>
+  <div class="stat-grid" style="grid-template-columns:repeat(3,1fr);margin-top:16px;">
+    <div class="stat-card blue">
+      <div class="stat-label">Differentiator #1</div>
+      <div style="font-size:18px;font-weight:800;color:var(--blue);margin:8px 0 6px;line-height:1.3;">Only service mesh built in Rust</div>
+      <div class="stat-sub">Maps to CISA: 70% of serious security bugs are memory vulnerabilities. Currently buried in homepage section, absent from product and comparison pages.</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-label">Differentiator #2</div>
+      <div style="font-size:18px;font-weight:800;color:var(--green);margin:8px 0 6px;line-height:1.3;">CNCF Graduated — First service mesh</div>
+      <div class="stat-sub">Highest CNCF maturity level signals enterprise-grade governance and vendor risk reduction. Currently in footer and About page — not on commercial pages where buyers decide.</div>
+    </div>
+    <div class="stat-card amber">
+      <div class="stat-label">Differentiator #3</div>
+      <div style="font-size:18px;font-weight:800;color:var(--amber);margin:8px 0 6px;line-height:1.3;">We invented the service mesh</div>
+      <div class="stat-sub">Founding narrative (Twitter infrastructure engineers, 2015, coined the term) appears in newsletter CTA copy — not in product or hero sections where it could anchor authority.</div>
+    </div>
+  </div>
+
+  <h3>4.4 Government / FedRAMP Segment Is Underrepresented</h3>
+  <p>The FIPS page (10,394 sessions, 0.63% conversion) and FedRAMP page (417+ sessions) are outperforming most commercial pages. The Carahsoft partner relationship signals federal channel awareness. Yet there is no dedicated government vertical page or buyer journey. This is a high-intent, non-discretionary-spend segment with unique compliance messaging needs — and an identifiable pathway to revenue that is not currently being built out.</p>
+</section>
+
+<!-- ═══════════ 05 SEO ═══════════ -->
+<section class="section" id="seo">
+  <div class="section-header">
+    <div class="section-num">05</div>
+    <div>
+      <h2>SEO Analysis</h2>
+      <p>Organic search performance, keyword gaps, and ranking opportunities</p>
+    </div>
+  </div>
+
+  <h3>5.1 Organic Performance Overview</h3>
+  <p>Organic Search drives 256K sessions (32% of total) — the second-largest channel and the primary driver of qualified, intent-based traffic. The fundamental challenge: the site ranks well for <em>informational</em> queries but poorly for <em>commercial-intent</em> queries where buyers are evaluating solutions.</p>
+
+  <h3>5.2 Keyword Opportunity Map</h3>
+  <p>The chart below shows the highest-priority organic keyword opportunities by impression volume and current average ranking position. Anything at position 10+ is off the first page of Google results.</p>
+
+  <div class="chart-wrap chart-full">
+    <div class="chart-title">Top Organic Keyword Opportunities — Impressions vs. Average Position</div>
+    <div class="chart-sub">Bar = total impressions · Line = avg. position (lower = better). Red dashed line = page 1 threshold (pos. 10).</div>
+    <canvas id="keywordChart" height="300"></canvas>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Query</th>
+        <th>Impressions</th>
+        <th>Clicks</th>
+        <th>CTR</th>
+        <th>Avg Position</th>
+        <th>Priority</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>service mesh</td>
+        <td>62,697</td>
+        <td>92</td>
+        <td>0.15%</td>
+        <td>12.8</td>
+        <td><span class="badge red">Critical</span></td>
+      </tr>
+      <tr>
+        <td>mtls</td>
+        <td>305,011</td>
+        <td>1,080</td>
+        <td>0.35%</td>
+        <td>5.6</td>
+        <td><span class="badge red">CTR fix needed</span></td>
+      </tr>
+      <tr>
+        <td>mutual tls</td>
+        <td>34,858</td>
+        <td>68</td>
+        <td>0.19%</td>
+        <td>8.4</td>
+        <td><span class="badge amber">High</span></td>
+      </tr>
+      <tr>
+        <td>what is mtls</td>
+        <td>14,616</td>
+        <td>11</td>
+        <td>0.075%</td>
+        <td>9.2</td>
+        <td><span class="badge amber">High</span></td>
+      </tr>
+      <tr>
+        <td>linkerd</td>
+        <td>46,575</td>
+        <td>80</td>
+        <td>0.17%</td>
+        <td>7.9</td>
+        <td><span class="badge red">Brand concern</span></td>
+      </tr>
+      <tr>
+        <td>istio alternatives</td>
+        <td>3,905</td>
+        <td>54</td>
+        <td>1.38%</td>
+        <td>4.2</td>
+        <td><span class="badge amber">CTR improve</span></td>
+      </tr>
+      <tr>
+        <td>zero trust kubernetes</td>
+        <td>3,233</td>
+        <td>24</td>
+        <td>0.74%</td>
+        <td>4.2</td>
+        <td><span class="badge amber">CTR improve</span></td>
+      </tr>
+      <tr>
+        <td>linkerd vs istio</td>
+        <td>6,972</td>
+        <td>552</td>
+        <td>7.9%</td>
+        <td>2.0</td>
+        <td><span class="badge green">Performing well</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="finding red">
+    <strong>"service mesh" at position 12.8 — the company that invented the service mesh is not on page 1</strong>
+    This is the highest-priority organic opportunity on the site. Achieving a top-5 ranking here would meaningfully increase qualified commercial traffic. Fix requires a definitive hub page or significant improvement of /what-is-a-service-mesh with stronger H1/H2 hierarchy, FAQ schema, and internal linking from all related content.
+  </div>
+
+  <div class="finding red">
+    <strong>"linkerd" (brand's own product name) ranks at position 7.9</strong>
+    Linkerd.io (the open-source project site) likely outranks buoyant.io for the product name — directing searchers to the OSS site rather than the commercial offering. Evaluate the cross-linking and CTA strategy between linkerd.io and buoyant.io. Ensure commercial options are prominent on linkerd.io.
+  </div>
+
+  <div class="finding blue">
+    <strong>mTLS content: 719K impressions, 0.39% CTR at position 8.4 — massive untapped volume</strong>
+    The /mtls-guide title tag and meta description need CTR optimization. At position 8, a compelling meta description could double or triple click-through. A move to top 3 positions could generate thousands of additional monthly sessions.
+  </div>
+
+  <h3>5.3 Forum SEO — Unconverted Intent Signal</h3>
+  <p>The community forum (/t/ URLs) generates thousands of monthly organic sessions from users searching specific Linkerd error messages and configuration questions. These are active hands-on users — among the most qualified potential enterprise leads on the site. Currently, all forum pages have a 0% key event rate. Adding a lightweight enterprise CTA to forum threads ("Using Linkerd in production? Explore enterprise support") could convert a small but high-quality segment of this traffic.</p>
+</section>
+
+<!-- ═══════════ 06 GEO ═══════════ -->
+<section class="section" id="geo">
+  <div class="section-header">
+    <div class="section-num">06</div>
+    <div>
+      <h2>AI Engine Visibility (GEO)</h2>
+      <p>Generative Engine Optimization — being cited by ChatGPT, Perplexity, Google AI Overviews, and Claude</p>
+    </div>
+  </div>
+
+  <p>Buoyant has not meaningfully optimized for generative AI answer engines. This is a growing gap as AI-assisted search captures an increasing share of how technical buyers research infrastructure products.</p>
+
+  <h3>6.1 GEO Readiness Checklist</h3>
+  <div class="chart-wrap">
+    <ul class="checklist">
+      <li>
+        <div class="check-icon fail">✕</div>
+        <div class="check-text"><strong>llms.txt file</strong><span>Returns 404. This emerging standard signals authoritative pages and product descriptions to AI systems. Easy early-mover advantage.</span></div>
+      </li>
+      <li>
+        <div class="check-icon fail">✕</div>
+        <div class="check-text"><strong>Organization schema (JSON-LD)</strong><span>Not detected. Required for knowledge panel establishment and entity recognition across AI systems.</span></div>
+      </li>
+      <li>
+        <div class="check-icon fail">✕</div>
+        <div class="check-text"><strong>SoftwareApplication schema</strong><span>Not detected on product or pricing pages. Essential for AI systems to understand what Buoyant Enterprise for Linkerd is.</span></div>
+      </li>
+      <li>
+        <div class="check-icon fail">✕</div>
+        <div class="check-text"><strong>FAQPage schema</strong><span>Not detected. Every major content page has FAQ sections — these are prime candidates for the schema that AI systems most frequently use to answer user questions.</span></div>
+      </li>
+      <li>
+        <div class="check-icon fail">✕</div>
+        <div class="check-text"><strong>Article / BlogPosting schema</strong><span>Not detected. Blog covers exactly the topics AI engines surface in infra/security responses. Schema markup signals publication date, author, and authority.</span></div>
+      </li>
+      <li>
+        <div class="check-icon warn">!</div>
+        <div class="check-text"><strong>Answer-friendly content format</strong><span>Partial. Some pages answer questions directly; others lead with paragraphs of context before the definition. AI engines favor pages that answer in the first sentence.</span></div>
+      </li>
+      <li>
+        <div class="check-icon warn">!</div>
+        <div class="check-text"><strong>AI crawler permissions (robots.txt)</strong><span>All AI crawlers permitted (no explicit block) — good. Consider adding explicit allow rules for GPTBot, ClaudeBot, PerplexityBot to signal active consent.</span></div>
+      </li>
+      <li>
+        <div class="check-icon warn">!</div>
+        <div class="check-text"><strong>Wikipedia / Wikidata entity</strong><span>Status unconfirmed. Buoyant and Linkerd are notable enough for Wikipedia articles (CNCF graduation, founding the category). AI systems heavily weight Wikipedia for entity knowledge.</span></div>
+      </li>
+      <li>
+        <div class="check-icon pass">✓</div>
+        <div class="check-text"><strong>robots.txt accessible and correct</strong><span>Clean, minimal, no AI crawlers blocked. Sitemap correctly declared.</span></div>
+      </li>
+      <li>
+        <div class="check-icon pass">✓</div>
+        <div class="check-text"><strong>MCP integration page exists</strong><span>/mcp-early-access signals forward-looking AI ecosystem positioning — a key GEO narrative advantage.</span></div>
+      </li>
+    </ul>
+  </div>
+
+  <h3>6.2 MCP Integration as GEO Differentiator</h3>
+  <div class="finding green">
+    <strong>Buoyant's MCP support for Linkerd is a first-mover GEO opportunity</strong>
+    Queries like "what service mesh works with AI workloads" and "how to manage AI agent infrastructure on Kubernetes" will increasingly be answered by AI engines. Buoyant is early to this space. Publishing substantive content about Linkerd + MCP, AI agent fleet management, and service mesh for AI infrastructure will establish Buoyant as the authoritative voice on this topic before competitors arrive. The /ai-kubernetes-episode series is a head start — it needs more prominent placement and text-format articles for SEO indexability.
+  </div>
+
+  <h3>6.3 Priority GEO Implementation Tasks</h3>
+  <table class="data-table">
+    <thead>
+      <tr><th>Task</th><th>Effort</th><th>Impact</th><th>Priority</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Create /llms.txt with product + page index</td>
+        <td>1–2 hours</td>
+        <td>Medium</td>
+        <td><span class="badge red">Do now</span></td>
+      </tr>
+      <tr>
+        <td>Add Organization + SoftwareApplication schema to homepage and product pages</td>
+        <td>Half-day dev</td>
+        <td>High</td>
+        <td><span class="badge red">Do now</span></td>
+      </tr>
+      <tr>
+        <td>Add FAQPage schema to all pages with FAQ sections</td>
+        <td>Half-day dev</td>
+        <td>High</td>
+        <td><span class="badge red">Do now</span></td>
+      </tr>
+      <tr>
+        <td>Add Article/BlogPosting schema to all blog posts</td>
+        <td>1 day dev (template)</td>
+        <td>Medium-High</td>
+        <td><span class="badge amber">This sprint</span></td>
+      </tr>
+      <tr>
+        <td>Publish text-format articles for AI Kubernetes Show episodes</td>
+        <td>2–4 hours/episode</td>
+        <td>Medium</td>
+        <td><span class="badge amber">This sprint</span></td>
+      </tr>
+      <tr>
+        <td>Create/update Wikipedia articles for Buoyant and Linkerd</td>
+        <td>1–2 days</td>
+        <td>Medium-High</td>
+        <td><span class="badge blue">Next 60 days</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══════════ 07 CONTENT ═══════════ -->
+<section class="section" id="content">
+  <div class="section-header">
+    <div class="section-num">07</div>
+    <div>
+      <h2>Content Marketing</h2>
+      <p>Funnel coverage, asset inventory, and journey gaps</p>
+    </div>
+  </div>
+
+  <h3>7.1 Funnel Coverage Assessment</h3>
+
+  <div class="chart-wrap chart-full">
+    <div class="chart-title">Content Funnel Coverage — Traffic vs. Conversion by Stage</div>
+    <div class="chart-sub">TOFU = top-of-funnel awareness | MOFU = evaluation | BOFU = decision</div>
+    <canvas id="funnelChart" height="200"></canvas>
+  </div>
+
+  <div class="stat-grid" style="grid-template-columns:repeat(3,1fr);">
+    <div class="stat-card green">
+      <div class="stat-label">TOFU — Top of Funnel</div>
+      <div class="stat-value" style="font-size:22px;">Strong</div>
+      <div class="stat-sub">mTLS guide, service mesh explainer, comparison pages. High traffic. Near-zero conversion. Content is excellent; conversion elements are missing.</div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-label">MOFU — Middle of Funnel</div>
+      <div class="stat-value" style="font-size:22px;">Weak</div>
+      <div class="stat-sub">Almost no ROI/TCO content, no migration guides as gated assets, no compliance checklists. This is the biggest content gap in the buyer journey.</div>
+    </div>
+    <div class="stat-card amber">
+      <div class="stat-label">BOFU — Bottom of Funnel</div>
+      <div class="stat-value" style="font-size:22px;">Present</div>
+      <div class="stat-sub">Enterprise guide ebook (7% conversion), pricing page, case studies, demo booking — but assets are under-promoted and not surfaced at the right journey moments.</div>
+    </div>
+  </div>
+
+  <h3>7.2 High-Priority Content Gaps</h3>
+  <table class="data-table">
+    <thead>
+      <tr><th>Missing Asset</th><th>Audience</th><th>Why It Matters</th><th>Format</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>ROI / TCO Business Case</td>
+        <td>VP/Director buyers</td>
+        <td>Buyers need to justify purchase internally. No ROI content exists.</td>
+        <td>Landing page + downloadable PDF</td>
+      </tr>
+      <tr>
+        <td>Istio → Linkerd Migration Guide</td>
+        <td>Existing Istio teams</td>
+        <td>High-intent competitive displacement. Blog post exists; gated guide does not.</td>
+        <td>Gated ebook / checklist</td>
+      </tr>
+      <tr>
+        <td>FIPS/FedRAMP Compliance Checklist</td>
+        <td>Government, finance, health</td>
+        <td>Compliance buyers don't need more explanation — they need an auditor-ready checklist.</td>
+        <td>Gated PDF</td>
+      </tr>
+      <tr>
+        <td>Service Mesh Competitive Bake-Off Guide</td>
+        <td>Technical evaluators</td>
+        <td>Buyers running internal evaluations need a structured framework that favors Linkerd's strengths.</td>
+        <td>Gated guide</td>
+      </tr>
+      <tr>
+        <td>Linkerd + MCP / AI Infrastructure Guide</td>
+        <td>AI/platform teams</td>
+        <td>First-mover GEO opportunity (see Section 6). No competitor content exists yet.</td>
+        <td>Blog series + landing page</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>7.3 Service Mesh Academy — Commercial Handoff Gap</h3>
+  <p>The Academy is a strong educational asset — 30+ workshops, self-paced courses, 2,986 sessions/period at 0.44% key event rate. But it functions as a closed loop: visitors learn and leave. A visitor who completes "Service Mesh 101" or attends a live workshop is warmed up and informed — exactly the moment to offer a demo, enterprise trial, or consultation. No such handoff currently exists at course completion or in Academy navigation.</p>
+</section>
+
+<!-- ═══════════ 08 TECHNICAL SEO ═══════════ -->
+<section class="section" id="techseo">
+  <div class="section-header">
+    <div class="section-num">08</div>
+    <div>
+      <h2>Technical SEO &amp; Site Structure</h2>
+      <p>Crawlability, schema, internal linking, and structural issues</p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <h3>8.1 Structured Data</h3>
+      <p>No structured data detected on any audited page. Priority implementation order:</p>
+      <table class="data-table">
+        <thead><tr><th>Schema Type</th><th>Target Pages</th></tr></thead>
+        <tbody>
+          <tr><td>Organization</td><td>Homepage, About</td></tr>
+          <tr><td>SoftwareApplication</td><td>Product, Pricing</td></tr>
+          <tr><td>FAQPage</td><td>All content pages</td></tr>
+          <tr><td>Article / BlogPosting</td><td>All blog posts</td></tr>
+          <tr><td>HowTo</td><td>Getting started, install guides</td></tr>
+          <tr><td>BreadcrumbList</td><td>All pages</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top:24px;">8.2 Robots.txt</h3>
+      <p>Clean and minimal. Minor issue: the sitemap URL in robots.txt references <code>www.buoyant.io</code> but the site serves from <code>buoyant.io</code> (no www). Confirm canonical domain handling is consistent across all redirects and sitemaps.</p>
+    </div>
+    <div>
+      <h3>8.3 Internal Linking</h3>
+      <p>High-authority content pages (mTLS guide, service mesh guide, comparison pages) do not consistently link to commercial pages (/linkerd-enterprise, /pricing, /contact). Link equity is not flowing toward the pages where conversion happens.</p>
+      <div class="finding amber">
+        <strong>Quick win: Audit top 20 organic landing pages</strong>
+        Ensure each has at least one contextually relevant link to /linkerd-enterprise and one link to a conversion action (ebook download, demo booking, or contact form).
+      </div>
+
+      <h3 style="margin-top:24px;">8.4 Analytics Issues</h3>
+      <ul style="font-size:13px;color:var(--slate-700);padding-left:18px;line-height:2;">
+        <li><strong>"(not set)"</strong> is the #2 landing page (79,155 sessions). Investigate GA4 configuration.</li>
+        <li>Encoded URL fragments (<code>/Y29udHJvbC</code>, <code>/cHJveHktZG</code>) are appearing as landing pages — likely user-specific paths incorrectly tracked.</li>
+        <li>Versioned documentation URLs (/2.18/, /2.17/, /2-edge/) need canonical tags pointing to current version to avoid duplicate content dilution.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 09 COMPETITIVE ═══════════ -->
+<section class="section" id="competitive">
+  <div class="section-header">
+    <div class="section-num">09</div>
+    <div>
+      <h2>Competitive Positioning</h2>
+      <p>Istio, Cilium, and emerging threats</p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="chart-wrap" style="margin:0;">
+      <div class="chart-title">Linkerd vs. Istio</div>
+      <p style="font-size:13px;color:var(--slate-600);margin-top:8px;">The comparison page ranks #2 for "linkerd vs istio" (position 2.0, 552 clicks from 6,972 impressions — 7.9% CTR). Strong performance.</p>
+      <div class="finding green" style="margin-top:12px;">
+        <strong>Opportunity</strong>
+        The "40% to 400% less latency" claim should link directly to the benchmarks study. Add a comparison-specific CTA: "Schedule a technical bake-off." Migrating-from-Istio content should be more prominently linked from this page.
+      </div>
+    </div>
+    <div class="chart-wrap" style="margin:0;">
+      <div class="chart-title">Linkerd vs. Cilium</div>
+      <p style="font-size:13px;color:var(--slate-600);margin-top:8px;">Ranking #1 for both "linkerd vs cilium" and "cilium vs linkerd." Strong. Gap: "cilium service mesh" has 2,300 impressions at position 14.9 — Buoyant does not rank for this variant.</p>
+      <div class="finding amber" style="margin-top:12px;">
+        <strong>Opportunity</strong>
+        Create a page specifically on "Cilium as a service mesh vs. Linkerd as a service mesh" to capture buyers evaluating Cilium's mesh mode.
+      </div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:28px;">Istio Ambient Mesh: Emerging Threat</h3>
+  <div class="finding amber">
+    <strong>"Istio ambient vs linkerd" is an emerging competitive battleground</strong>
+    Istio's ambient mesh mode reduces the complexity gap that has historically been Linkerd's strongest selling point. The 2025 benchmarks post exists (/2025/04/24/linkerd-vs-ambient-mesh-2025-benchmarks, 740 sessions) but a permanent, authoritative comparison page does not. This gap should be filled before the competitive narrative around Istio Ambient solidifies in AI engine training data and buyer mindshare.
+  </div>
+
+  <h3>Competitive Keyword Gaps</h3>
+  <table class="data-table">
+    <thead>
+      <tr><th>Query</th><th>Impressions</th><th>Current Position</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>cilium service mesh</td><td>2,300</td>
+        <td><span class="badge red">14.9 — off page 1</span></td>
+        <td>Create dedicated comparison page</td>
+      </tr>
+      <tr>
+        <td>istio alternatives</td><td>3,905</td>
+        <td><span class="badge amber">4.2 — page 1</span></td>
+        <td>Optimize CTR (current: 1.38%)</td>
+      </tr>
+      <tr>
+        <td>istio ambient vs linkerd</td><td>175</td>
+        <td><span class="badge amber">2.4 — page 1</span></td>
+        <td>Create permanent comparison page</td>
+      </tr>
+      <tr>
+        <td>kubernetes service mesh</td><td>3,699</td>
+        <td><span class="badge amber">6.7 — page 1</span></td>
+        <td>Improve existing ranking with content refresh</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══════════ 10 BEST PRACTICES ═══════════ -->
+<section class="section" id="bestpractices">
+  <div class="section-header">
+    <div class="section-num">10</div>
+    <div>
+      <h2>Marketing Best Practices</h2>
+      <p>Channel strategy, lead nurturing, attribution, and community</p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <h3>Email: Most Underinvested Channel</h3>
+      <p>Email converts at 1.46% — 7–30x higher than any other channel — yet represents only 1.5% of total traffic. There is no visible evidence of a structured welcome sequence, behavioral triggers, lead scoring by persona, or a trial-to-paid nurture track. Even a basic 3-email welcome series with relevant technical content followed by a commercial CTA has been shown to 2–3x conversion rates for this audience profile.</p>
+
+      <h3>Demo Booking Friction</h3>
+      <p>"Book a call" and "Book a meeting" are the primary BOFU CTAs. Verify that clicking these leads immediately to an embedded calendar (Calendly, Chili Piper) rather than a generic contact form. Confirmation emails should include relevant content (case studies, getting started guide) to maintain momentum between scheduling and the actual call.</p>
+    </div>
+    <div>
+      <h3>Community as a Conversion Channel</h3>
+      <p>The Linkerd Discourse forum generates thousands of monthly organic sessions from users actively working with Linkerd in production. These are the most qualified potential enterprise leads on the site — demonstrated, hands-on users. Currently, every forum page has a 0% key event rate. Adding a persistent sidebar or pinned post ("Running Linkerd in production? Explore enterprise support, 24/7 SLAs, and FIPS compliance") would cost minimal engineering effort and could generate high-quality leads at scale.</p>
+
+      <h3>Paid Social — Pause and Reassess</h3>
+      <p>At 0.020% key event rate and 72% bounce rate, paid social is generating negligible commercial return. Recommended approach: pause current campaigns, optimize the homepage and a dedicated gated-content landing page, then relaunch with LinkedIn-specific targeting by job title (Platform Engineer, VP Engineering), linking to the enterprise guide ebook — not the homepage.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 11 PRIORITIES ═══════════ -->
+<section class="section" id="priorities">
+  <div class="section-header">
+    <div class="section-num">11</div>
+    <div>
+      <h2>Priority Recommendations</h2>
+      <p>Ordered by expected impact and effort</p>
+    </div>
+  </div>
+
+  <p style="margin-bottom:24px;">Recommendations are organized into four tiers. Tier 1 items should be addressed first — they require the least effort relative to their expected lead-generation impact.</p>
+
+  <!-- TIER 1 -->
+  <div class="tier tier-1">
+    <div class="tier-header">
+      <span style="font-size:18px;">🔴</span>
+      Tier 1 — Critical: Do These First
+      <span class="badge red" style="margin-left:auto;">Highest ROI</span>
+    </div>
+    <div class="tier-body">
+      <div class="tier-item">
+        <div class="tier-num">1</div>
+        <div>
+          <div class="tier-item-title">Fix the homepage conversion path</div>
+          <div class="tier-item-body">Replace docs-linked "Get started" as primary CTA. Split by persona: technical → free trial/docs; buyers → demo booking. Reduce total CTAs to 2–3 with one clear primary action. Add buyer-outcome language above the fold.</div>
+        </div>
+        <div class="tier-item-impact"><span class="badge red">+100–150 leads/mo</span></div>
+      </div>
+      <div class="tier-item">
+        <div class="tier-num">2</div>
+        <div>
+          <div class="tier-item-title">Add contextual conversion offers to all high-traffic content pages</div>
+          <div class="tier-item-body">mTLS guide → "Download mTLS implementation checklist." Service mesh guide → enterprise trial or ebook. Comparison pages → "Schedule a technical bake-off." Every TOFU/MOFU page should end with a relevant gated asset, not a docs link.</div>
+        </div>
+        <div class="tier-item-impact"><span class="badge red">+30–60 leads/mo</span></div>
+      </div>
+      <div class="tier-item">
+        <div class="tier-num">3</div>
+        <div>
+          <div class="tier-item-title">Surface the enterprise guide ebook everywhere</div>
+          <div class="tier-item-body">Link /download/the-enterprise-architects-guide from the homepage, /linkerd-enterprise, /pricing, both comparison pages, and the FIPS page. At 7% conversion, routing an additional 200 sessions/month generates 14 leads with zero new content.</div>
+        </div>
+        <div class="tier-item-impact"><span class="badge red">+10–20 leads/mo</span></div>
+      </div>
+      <div class="tier-item">
+        <div class="tier-num">4</div>
+        <div>
+          <div class="tier-item-title">Investigate the "linkerd" brand query ranking problem</div>
+          <div class="tier-item-body">Brand product name ranking at position 7.9 likely means linkerd.io is outranking buoyant.io for the product itself. Ensure commercial CTAs and cross-links are prominent on linkerd.io directing users to Buoyant Enterprise.</div>
+        </div>
+        <div class="tier-item-impact"><span class="badge amber">Brand risk</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIER 2 -->
+  <div class="tier tier-2" style="margin-top:20px;">
+    <div class="tier-header">
+      <span style="font-size:18px;">🟡</span>
+      Tier 2 — High Priority: Next 60–90 Days
+    </div>
+    <div class="tier-body">
+      <div class="tier-item">
+        <div class="tier-num">5</div>
+        <div>
+          <div class="tier-item-title">Broaden homepage headline — test new positioning</div>
+          <div class="tier-item-body">Remove "The best service mesh for AWS" as the primary frame. A/B test buyer-oriented headlines. Move AWS-specific content to the dedicated solutions page. Surface the three key differentiators: invented the category, only Rust-based service mesh, CNCF graduated.</div>
+        </div>
+        <div class="tier-item-impact"><span class="badge amber">Messaging lift</span></div>
+      </div>
+      <div class="tier-item">
+        <div class="tier-num">6</div>
+        <div>
+          <div class="tier-item-title">Implement structured data (schema markup)</div>
+          <div class="tier-item-body">Add Organization, FAQPage, Article, SoftwareApplication, and BreadcrumbList schemas. Priority: FAQ schema on all content pages (AI engines use this most). Estimated: 1–2 days of developer work for lasting SEO and GEO benefit.</div>
+        </div>
+        <div class="tier-item-impact"><span class="badge amber">SEO + GEO</span></div>
+      </div>
+      <div class="tier-item">
+        <div class="tier-num">7</div>
+        <div>
+          <div class="tier-item-title">Create llms.txt</div>
+          <div class="tier-item-body">Create /llms.txt identifying authoritative pages, product descriptions, and key claims. 1–2 hours of effort. Early-mover advantage for AI engine visibility before competitors adopt this standard.</div>
+        </div>
+        <div class="tier-item-impact"><span class="badge amber">GEO</span></div>
+      </div>
+      <div class="tier-item">
+        <div class="tier-num">8</div>
+        <div>
+          <div class="tier-item-title">Add enterprise CTA to community forum pages</div>
+          <div class="tier-item-body">Forum users are hands-on Linkerd practitioners — the site's most qualified organic audience. Add a persistent sidebar or pinned post linking to /linkerd-enterprise. Minimal engineering effort, high-quality lead potential.</div>
+        </div>
+        <div class="tier-item-impact"><span class="badge amber">Lead quality</span></div>
+      </div>
+      <div class="tier-item">
+        <div class="tier-num">9</div>
+        <div>
+          <div class="tier-item-title">Create a dedicated ROI / business case page</div>
+          <div class="tier-item-body">Aggregate quantified outcomes from existing case studies (Xbox monitoring cost savings, latency improvements, Zscaler results). This is the missing buyer-facing content that enables internal budget justification.</div>
+        </div>
+        <div class="tier-item-impact"><span class="badge amber">Buyer conversion</span></div>
+      </div>
+      <div class="tier-item">
+        <div class="tier-num">10</div>
+        <div>
+          <div class="tier-item-title">Pause paid social; relaunch with LinkedIn targeting</div>
+          <div class="tier-item-body">Current paid social: 0.020% key event rate, 72% bounce. Pause immediately. When relaunching, target by job title on LinkedIn, link to enterprise guide ebook (not homepage), and retarget pricing/product page visitors who didn't convert.</div>
+        </div>
+        <div class="tier-item-impact"><span class="badge amber">Cost savings + lift</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIER 3 -->
+  <div class="tier tier-3" style="margin-top:20px;">
+    <div class="tier-header">
+      <span style="font-size:18px;">🔵</span>
+      Tier 3 — Important: 90–180 Days
+    </div>
+    <div class="tier-body">
+      <div class="tier-item">
+        <div class="tier-num">11</div>
+        <div>
+          <div class="tier-item-title">Build government / public sector vertical page</div>
+          <div class="tier-item-body">Dedicated FedRAMP/FIPS/CMMC buyer journey, Carahsoft partner callout, government case study if available. FIPS page is already overperforming — this formalizes and scales that segment.</div>
+        </div>
+        <div class="tier-item-impact"><span class="badge blue">New segment</span></td>
+      </div>
+      <div class="tier-item">
+        <div class="tier-num">12</div>
+        <div>
+          <div class="tier-item-title">Create MOFU gated assets</div>
+          <div class="tier-item-body">Istio-to-Linkerd migration guide (gated), service mesh TCO calculator, FIPS/FedRAMP compliance checklist. These fill the middle-of-funnel gap and capture evaluation-stage buyers who won't fill out a contact form but will download a guide.</div>
+        </div>
+        <div class="tier-item-impact"><span class="badge blue">Pipeline</span></div>
+      </div>
+      <div class="tier-item">
+        <div class="tier-num">13</div>
+        <div>
+          <div class="tier-item-title">Optimize meta titles and descriptions for top 10 organic pages</div>
+          <div class="tier-item-body">Priority: /mtls-guide (719K impressions at 0.39% CTR), homepage, /what-is-a-service-mesh. Focus on CTR improvement over ranking. The mTLS guide alone — at 700K impressions — could 3–5x clicks with a better title tag.</div>
+        </div>
+        <div class="tier-item-impact"><span class="badge blue">+Organic traffic</span></div>
+      </div>
+      <div class="tier-item">
+        <div class="tier-num">14</div>
+        <div>
+          <div class="tier-item-title">Build and promote AI Kubernetes content hub</div>
+          <div class="tier-item-body">Expand /ai-kubernetes-episode into a full hub. Publish text articles for each episode (SEO indexability). Position Buoyant as the authority on service mesh for AI workloads and agent fleets — a first-mover GEO opportunity.</div>
+        </div>
+        <div class="tier-item-impact"><span class="badge blue">GEO + future traffic</span></div>
+      </div>
+      <div class="tier-item">
+        <div class="tier-num">15</div>
+        <div>
+          <div class="tier-item-title">Invest in email nurture sequences</div>
+          <div class="tier-item-body">Email converts at 1.46% — the best channel. A 3–5 email welcome sequence, behavioral triggers for pricing/product page visitors, and a trial-to-enterprise track would compound this channel's already-strong performance.</div>
+        </div>
+        <div class="tier-item-impact"><span class="badge blue">Email channel lift</span></div>
+      </div>
+      <div class="tier-item">
+        <div class="tier-num">16</div>
+        <div>
+          <div class="tier-item-title">Fix "service mesh" ranking (position 12.8)</div>
+          <div class="tier-item-body">Create a definitive hub page or significantly improve /what-is-a-service-mesh. Build internal links from all blog and content pages. The company that invented the service mesh should rank top 5 for the category term.</div>
+        </div>
+        <div class="tier-item-impact"><span class="badge blue">+Organic volume</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIER 4 -->
+  <div class="tier tier-4" style="margin-top:20px;">
+    <div class="tier-header">
+      <span style="font-size:18px;">⚪</span>
+      Tier 4 — Longer-Term
+    </div>
+    <div class="tier-body">
+      <div class="tier-item">
+        <div class="tier-num">17</div>
+        <div>
+          <div class="tier-item-title">Investigate and resolve case study traffic anomalies</div>
+          <div class="tier-item-body">Determine the source of the ~30K uniform sessions on Xbox/Schenker/Adidas case studies. Add conversion elements if legitimate; exclude from KPI reporting if not.</div>
+        </div>
+        <div class="tier-item-impact"><span class="badge gray">Data hygiene</span></div>
+      </div>
+      <div class="tier-item">
+        <div class="tier-num">18</div>
+        <div>
+          <div class="tier-item-title">Build "Linkerd vs. Istio Ambient Mesh" dedicated page</div>
+          <div class="tier-item-body">The 2025 benchmark post is a start. A permanent comparison page addresses the emerging Istio Ambient threat before the competitive narrative solidifies in AI training data and buyer research.</div>
+        </div>
+        <div class="tier-item-impact"><span class="badge gray">Competitive defense</span></div>
+      </div>
+      <div class="tier-item">
+        <div class="tier-num">19</div>
+        <div>
+          <div class="tier-item-title">Wikipedia and entity establishment</div>
+          <div class="tier-item-body">Create or update Wikipedia articles for Buoyant and Linkerd. Add Wikidata entries. AI engines heavily weight Wikipedia for entity knowledge — this is foundational GEO infrastructure.</div>
+        </div>
+        <div class="tier-item-impact"><span class="badge gray">Entity / GEO</span></div>
+      </div>
+      <div class="tier-item">
+        <div class="tier-num">20</div>
+        <div>
+          <div class="tier-item-title">Strategic SEO review of linkerd.io ↔ buoyant.io relationship</div>
+          <div class="tier-item-body">Evaluate how the OSS project site and the commercial site interact from an SEO and conversion standpoint. Ensure commercial CTAs are visible on linkerd.io and that link equity flows toward buoyant.io's commercial pages.</div>
+        </div>
+        <div class="tier-item-impact"><span class="badge gray">Brand + SEO</span></div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+</div><!-- /container -->
+
+<footer>
+  <strong>buoyant.io Marketing Audit</strong> · April 23, 2026 · Data range: Jan 1, 2025 – Apr 23, 2026<br>
+  Based on Google Analytics 4 data, Google Search Console organic query data, and direct site crawl of buoyant.io including docs, academy, and blog.
+</footer>
+
+<!-- ═══════════ CHARTS ═══════════ -->
+<script>
+Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
+Chart.defaults.font.size = 12;
+Chart.defaults.color = '#64748b';
+
+const BLUE   = '#3b82f6';
+const GREEN  = '#10b981';
+const AMBER  = '#f59e0b';
+const RED    = '#ef4444';
+const SLATE  = '#64748b';
+const LIGHT  = '#e2e8f0';
+
+// ── 1. Channel Sessions (horizontal bar) ──────────────────────
+new Chart(document.getElementById('channelSessions'), {
+  type: 'bar',
+  data: {
+    labels: ['Direct','Organic Search','Referral','Paid Search','Email','Organic Social','Paid Social'],
+    datasets: [{
+      label: 'Sessions',
+      data: [404636, 256426, 71382, 20779, 12095, 11538, 8518],
+      backgroundColor: [BLUE, '#6366f1', '#8b5cf6', AMBER, GREEN, SLATE, RED],
+      borderRadius: 5, borderSkipped: false
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { color: '#f1f5f9' }, ticks: { callback: v => (v/1000).toFixed(0)+'K' } },
+      y: { grid: { display: false } }
+    }
+  }
+});
+
+// ── 2. Channel Key Event Rate ──────────────────────────────────
+new Chart(document.getElementById('channelConv'), {
+  type: 'bar',
+  data: {
+    labels: ['Email','Referral','Direct','Organic Social','Organic Search','Paid Search','Paid Social'],
+    datasets: [{
+      label: 'Key Event Rate',
+      data: [1.46, 0.26, 0.18, 0.043, 0.049, 0.033, 0.020],
+      backgroundColor: [GREEN, '#6366f1', BLUE, SLATE, '#8b5cf6', AMBER, RED],
+      borderRadius: 5, borderSkipped: false
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    plugins: {
+      legend: { display: false },
+      annotation: {}
+    },
+    scales: {
+      x: {
+        grid: { color: '#f1f5f9' },
+        ticks: { callback: v => v + '%' },
+        max: 2.0
+      },
+      y: { grid: { display: false } }
+    }
+  }
+});
+
+// ── 3. Landing Page Bubble (sessions vs key event rate) ────────
+new Chart(document.getElementById('landingBubble'), {
+  type: 'bubble',
+  data: {
+    datasets: [
+      { label: 'Homepage (/)',             data: [{ x: 198484, y: 0.066, r: 28 }],  backgroundColor: 'rgba(239,68,68,.7)' },
+      { label: 'Case Studies (Xbox/etc)',  data: [{ x: 29500,  y: 0.01,  r: 18 }],  backgroundColor: 'rgba(245,158,11,.6)' },
+      { label: '/what-is-a-service-mesh',  data: [{ x: 13124,  y: 0.091, r: 14 }],  backgroundColor: 'rgba(99,102,241,.7)' },
+      { label: '/fips-kubernetes-…',       data: [{ x: 10394,  y: 0.63,  r: 12 }],  backgroundColor: 'rgba(16,185,129,.7)' },
+      { label: '/mtls-guide',              data: [{ x: 7081,   y: 0.18,  r: 10 }],  backgroundColor: 'rgba(99,102,241,.5)' },
+      { label: '/linkerd-vs-istio',        data: [{ x: 5929,   y: 0.22,  r: 9 }],   backgroundColor: 'rgba(139,92,246,.7)' },
+      { label: '/linkerd-enterprise',      data: [{ x: 3686,   y: 0.79,  r: 8 }],   backgroundColor: 'rgba(16,185,129,.7)' },
+      { label: '/pricing',                 data: [{ x: 1965,   y: 1.07,  r: 7 }],   backgroundColor: 'rgba(16,185,129,.8)' },
+      { label: '/enterprise guide (dl)',   data: [{ x: 355,    y: 7.04,  r: 6 }],   backgroundColor: 'rgba(16,185,129,1)'  },
+    ]
+  },
+  options: {
+    plugins: {
+      legend: { position: 'right', labels: { boxWidth: 10, font: { size: 11 } } },
+      tooltip: {
+        callbacks: {
+          label: ctx => `${ctx.dataset.label}: ${ctx.raw.x.toLocaleString()} sessions, ${ctx.raw.y}% key event rate`
+        }
+      }
+    },
+    scales: {
+      x: {
+        title: { display: true, text: 'Sessions (period total)' },
+        grid: { color: '#f1f5f9' },
+        ticks: { callback: v => (v/1000).toFixed(0)+'K' }
+      },
+      y: {
+        title: { display: true, text: 'Key Event Rate (%)' },
+        grid: { color: '#f1f5f9' },
+        ticks: { callback: v => v + '%' }
+      }
+    }
+  }
+});
+
+// ── 4. Conversion Rate by Page (horizontal bar) ────────────────
+new Chart(document.getElementById('convByPage'), {
+  type: 'bar',
+  data: {
+    labels: [
+      'Enterprise Guide Ebook',
+      'Webinar Registration',
+      'Service Mesh 101 Course',
+      'Contact Page',
+      'Pricing',
+      'Linkerd Enterprise',
+      'FIPS Page',
+      'Zscaler Case Study',
+      'Service Mesh Academy',
+      'mTLS Guide',
+      'Homepage'
+    ],
+    datasets: [{
+      label: 'Session Key Event Rate (%)',
+      data: [7.04, 6.31, 1.56, 1.24, 1.07, 0.79, 0.63, 0.55, 0.44, 0.18, 0.066],
+      backgroundColor: [GREEN, GREEN, '#10b981cc', AMBER, AMBER, AMBER, AMBER, AMBER, SLATE, '#64748baa', RED],
+      borderRadius: 5, borderSkipped: false
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    plugins: {
+      legend: { display: false },
+      annotation: {}
+    },
+    scales: {
+      x: {
+        grid: { color: '#f1f5f9' },
+        ticks: { callback: v => v + '%' },
+        max: 8
+      },
+      y: { grid: { display: false } }
+    }
+  }
+});
+
+// ── 5. Keyword Opportunities ───────────────────────────────────
+const kwLabels = ['mtls','service mesh','linkerd','mutual tls','what is mtls','istio alternatives','zero trust kubernetes','linkerd vs istio'];
+const kwImpressions = [305011, 62697, 46575, 34858, 14616, 3905, 3233, 6972];
+const kwPositions   = [5.6, 12.8, 7.9, 8.4, 9.2, 4.2, 4.2, 2.0];
+
+new Chart(document.getElementById('keywordChart'), {
+  type: 'bar',
+  data: {
+    labels: kwLabels,
+    datasets: [
+      {
+        type: 'bar',
+        label: 'Impressions',
+        data: kwImpressions,
+        backgroundColor: kwPositions.map(p => p > 10 ? 'rgba(239,68,68,.7)' : p > 5 ? 'rgba(245,158,11,.7)' : 'rgba(16,185,129,.7)'),
+        borderRadius: 5, borderSkipped: false,
+        yAxisID: 'y'
+      },
+      {
+        type: 'line',
+        label: 'Avg Position (lower = better)',
+        data: kwPositions,
+        borderColor: '#1d4ed8',
+        backgroundColor: '#1d4ed8',
+        pointRadius: 5, pointHoverRadius: 7,
+        tension: 0.3,
+        yAxisID: 'y2'
+      }
+    ]
+  },
+  options: {
+    plugins: {
+      legend: { position: 'top' },
+      annotation: {}
+    },
+    scales: {
+      y: {
+        position: 'left',
+        title: { display: true, text: 'Impressions' },
+        grid: { color: '#f1f5f9' },
+        ticks: { callback: v => (v/1000).toFixed(0)+'K' }
+      },
+      y2: {
+        position: 'right',
+        reverse: true,
+        title: { display: true, text: 'Avg Position (lower = better)' },
+        grid: { display: false },
+        min: 0, max: 20,
+        ticks: { callback: v => '#' + v }
+      }
+    }
+  }
+});
+
+// ── 6. Funnel Chart ────────────────────────────────────────────
+new Chart(document.getElementById('funnelChart'), {
+  type: 'bar',
+  data: {
+    labels: ['TOFU — Awareness', 'MOFU — Evaluation', 'BOFU — Decision'],
+    datasets: [
+      {
+        label: 'Relative Content Volume',
+        data: [85, 15, 40],
+        backgroundColor: [GREEN, RED, AMBER],
+        borderRadius: 6, borderSkipped: false
+      },
+      {
+        label: 'Avg Conversion Rate (%)',
+        data: [0.12, 0, 1.0],
+        backgroundColor: ['rgba(16,185,129,.3)', 'rgba(239,68,68,.3)', 'rgba(245,158,11,.3)'],
+        borderRadius: 6, borderSkipped: false
+      }
+    ]
+  },
+  options: {
+    plugins: {
+      legend: { position: 'top' },
+      tooltip: {
+        callbacks: {
+          label: ctx => {
+            if (ctx.datasetIndex === 0) return `Content Volume Index: ${ctx.raw}`;
+            return `Avg Key Event Rate: ${ctx.raw}%`;
+          }
+        }
+      }
+    },
+    scales: {
+      x: { grid: { display: false } },
+      y: { grid: { color: '#f1f5f9' }, ticks: { display: false } }
+    }
+  }
+});
+</script>
+
+</body>
+</html>
